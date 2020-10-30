@@ -1,0 +1,42 @@
+.add-form {
+    width: 295px;
+}
+
+.add-form__textarea {
+    width: 295px;
+    border: 2px solid var(--color-light);
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 30px;
+    resize: none;
+} 
+
+.add-form__textarea_large-height {
+    height: 160px;
+}
+
+.add-form__textarea_low-height {
+    height: 50px;
+}
+
+.add-form__button {
+    width: 137px;
+    height: 40px;
+    border-radius: 10px;
+    border: none;
+}
+
+.add-form__button_close {
+    background: var(--color-grey)
+}
+
+.add-form__button_add {
+    background: var(--color-blue);
+    color: var(--color-white)
+}
+
+.add-form__wrapper {
+    display: flex;
+    justify-content: space-between;
+}

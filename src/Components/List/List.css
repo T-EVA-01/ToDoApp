@@ -1,0 +1,57 @@
+.task {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.task:not(:last-child) {
+    margin-bottom: 30px;
+} 
+
+.task__remove-button {
+    margin-right: 15px;
+    background: var(--color-red);
+    border: none;
+    border-radius: 100%;
+    width: 22px;
+    height: 22px;
+    position: relative;
+    cursor: pointer;
+}
+
+.task__checkbox {
+    margin-right: 15px;
+}
+
+.task__remove-button::before {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background: var(--color-white);
+    border-radius: 10px;
+    display: block;
+    margin: auto 0;
+    top: 10px;
+}
+
+.task__text {
+    font-family: Gilroy;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 120%;
+    letter-spacing: 0.01em;
+    color: #000000;
+    display: block;
+    width: 90%;
+    overflow: hidden;
+}
+
+.task__text_pointer {
+    cursor: pointer;
+}
+
+
+
+
