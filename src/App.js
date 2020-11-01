@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import Header from './Components/Header/Header'
 import Button from './Components/Button/Button';
@@ -10,242 +10,206 @@ import Condition from './Components/Сondition';
 import './css/App.css';
 import './css/fonts.css';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
+export default function App() {
 
-    this.state = {
-      isModalOpen: false,
-      editWindowOpen: false,
-      isDone: false,
-      isEditActive: false,
-      changingItem: null,
-      newItem: '',
-      itemList: [],
-    };
-
-    this.toggleModal = this.toggleModal.bind(this);
-    this.toggleEdit = this.toggleEdit.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.addItemToPage = this.addItemToPage.bind(this);
-    this.toggleEditModal = this.toggleEditModal.bind(this);
-    this.addChangedItemToPage = this.addChangedItemToPage.bind(this);
-    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
-    this.daleteItem = this.daleteItem.bind(this);
-    this.changeItem = this.changeItem.bind(this);
-  }
+    const [newItem, setNewItem] = useState('');
+    const [itemList, setItemList] = useState([]);
+    const [isEditActive, setIsEditActive] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDone, setIsDone] = useState(false);
+    const [editWindowOpen, setEditWindowOpen] = useState(false);
+    const [changingItem, setChangingItem] = useState({});
 
 
 
-  componentDidMount() {
-    const itemList = localStorage.getItem('itemList')
+    useEffect(() => {
+        const taskList = JSON.parse(localStorage.getItem('taskList'));
     
-    if(Boolean(itemList)) {
-      this.setState({
-        itemList : JSON.parse(itemList)
-      })
-    } 
-  }
+        if(Boolean(taskList)) {
+          setItemList(taskList)  
+        } 
+    }, [])
 
 
 
-  toggleEdit() {
-    this.setState(state => ({isEditActive: !state.isEditActive}))
-  }
-
-  toggleModal() {
-    this.setState(state => ({isModalOpen: !state.isModalOpen}))
-    this.setState({isEditActive: false})
-  }
-
-  toggleEditModal() {
-    this.setState(state => ({
-      editWindowOpen: !state.editWindowOpen,
-      newItem: ''
-    }))
-  }
-
-
-
-  handleInputChange(key, value) {
-    this.setState({[key]: value})
-  }
-
-  handleCheckboxChange(item) {
-    item.complited = !item.complited;
-    this.setState(state => ({isDone: !state.isDone}));
-
-    const itemList = [...this.state.itemList];
-    localStorage.setItem('itemList', JSON.stringify(itemList))
-  }
-
-
-
-  daleteItem(id) {
-    const itemList = [...this.state.itemList]
-    const updatedItemList = itemList.filter(item => item.id !== id)
-    
-    this.setState({itemList: updatedItemList})
-
-    localStorage.setItem('itemList', JSON.stringify(updatedItemList));
-    const storageItemListLingth = JSON.parse(localStorage.getItem('itemList')).length;
-    if(storageItemListLingth === 0) {
-      localStorage.removeItem('itemList') 
+    const toggleModel = () => {
+        setIsModalOpen(!isModalOpen);
+        setIsEditActive(false)
     }
 
-  }
-
-
-
-  changeItem(item) {
-    this.state.isEditActive &&
-    this.setState(state => ({
-      editWindowOpen: !state.editWindowOpen,
-      newItem: item.value,
-      changingItem: {
-        index: this.state.itemList.indexOf(item),
-        id: item.id,
-        value: item.value,
-        complited: item.complited
-      }
-    }))
-  }
-
-  addChangedItemToPage() {
-
-    if (this.state.newItem.trim().length === 0) {
-      alert('Введить что-нибудь');
-
-    } else {
-      const indexOfItem = this.state.changingItem.index;
-      const newItem = {
-        id: this.state.changingItem.id,
-        value: this.state.newItem,
-        complited: this.state.changingItem.complited
-      }
-
-      const newList = [...this.state.itemList]
-      newList.splice(indexOfItem, 1, newItem)
-
-      this.setState({
-        newItem: '',
-        itemList: newList,
-        editWindowOpen: !this.state.editWindowOpen
-      })
-
-      localStorage.setItem('itemList', JSON.stringify(newList));
+    const toggleEdit = () => {
+        setIsEditActive(!isEditActive)
     }
-  }
 
-  addItemToPage() {
-
-    if (this.state.newItem.trim().length === 0) {
-      alert('Введить что-нибудь');
-
-    } else {
-      const newItem = {
-        id: Number(Math.random().toFixed(10)) * Math.pow(10, 10),
-        value: this.state.newItem,
-        complited: false
-      }
-
-      const itemList = [...this.state.itemList]
-      itemList.push(newItem)
-
-      this.setState({
-        newItem: '',
-        itemList,
-        isModalOpen: !this.state.isModalOpen
-      })
-
-      localStorage.setItem('itemList', JSON.stringify(itemList));
-    }   
-  }
+    const toggleEditModal = () => {
+        setEditWindowOpen(!editWindowOpen);
+        setNewItem('')
+    }
 
 
-  render() {
+    
+    const handleCheckboxChange = (item) => {
+        item.complited = !item.complited;
+        setIsDone(!isDone);
+        const taskList = [...itemList];
+        localStorage.setItem('taskList', JSON.stringify(taskList));
+    }
+
+    const handleInputChange = (value) => {
+        setNewItem(value)
+    }
+
+
+
+    const daleteItem = (id) => {
+        const taskList = [...itemList];
+        const updatedItemList = taskList.filter(item => item.id !== id);
+        setItemList(updatedItemList);
+
+        localStorage.setItem('taskList', JSON.stringify(updatedItemList));
+        const storageItemListLingth = JSON.parse(localStorage.getItem('taskList')).length;
+        if(storageItemListLingth === 0) {
+          localStorage.removeItem('taskList');
+        };
+    }
+
+
+
+    const addItemToPage = () => {
+        const currentValue = newItem.trim().length;
+        if(currentValue === 0) {
+            alert('Введите что-нибудь');
+        } else {
+            const newTask = {
+                id: Number(Math.random().toFixed(10)) * Math.pow(10, 10),
+                value: newItem,
+                complited: false
+            };
+
+            const taskList = [...itemList];
+            taskList.push(newTask);
+
+            setNewItem('');
+            setItemList(taskList);
+            setIsModalOpen(!isModalOpen)
+
+            localStorage.setItem('taskList', JSON.stringify(taskList));
+        }
+    }
+
+    const changeItem = (item) => {
+        const condition = isEditActive;
+        if(condition) {
+            setEditWindowOpen(!editWindowOpen);
+            setNewItem(item.value);
+            setChangingItem({
+                index: itemList.indexOf(item),
+                id: item.id,
+                value: item.value,
+                complited: item.complited
+            });
+        };
+    }
+
+    const addChangedItemToPage = () => {
+        const currentValue = newItem.trim().length;
+        if(currentValue === 0) {
+            alert('Введить что-нибудь');
+        } else {
+            const indexOfItem = changingItem.index;
+            const newTask = {
+                id: changingItem.id,
+                value: newItem,
+                complited: changingItem.complited
+            };
+
+            const newTaskList = [...itemList];
+            newTaskList.splice(indexOfItem, 1, newTask);
+
+            setNewItem('');
+            setItemList(newTaskList);
+            setEditWindowOpen(!editWindowOpen);
+
+            localStorage.setItem('taskList', JSON.stringify(newTaskList));
+
+        }
+    }
+
     return(
 
-      <div className="container">
+        <div className='container'>
 
-        <Header title="Сегодня">
-          <Condition 
-            isActive={this.state.itemList.length !== 0}
-            type={1}>
-              <Button
-                tag="button"  
-                doThis={this.toggleEdit} 
-                buttonClass={"header__button"}>
-                {this.state.isEditActive ? 'Отмена' : 'Править'}
-              </Button>
-          </Condition>
-        </Header>
+            <Header title='Сегодня'>
+                <Condition
+                    isActive={itemList.length !== 0}
+                    type={1}>
+                        <Button 
+                            tag='button'
+                            doThis={toggleEdit}
+                            buttonClass={'header__button'}
+                        >
+                            {isEditActive ? 'Отмена' : 'Править'}
+                        </Button>
+                </Condition>
+            </Header>
 
-      <main className="main">
+            <main className='main'>
 
-          <Condition 
-            isActive={this.state.itemList.length === 0} 
-            type = {1}>
-              <h2 className="task-state">Список задач пуст</h2>
-          </Condition>
+                <Condition 
+                    isActive={itemList.length === 0}
+                    type={1}>
+                        <h2 className='task-state'>Список задач пуст</h2>
+                </Condition>
+
+                <List 
+                    itemList={itemList}
+                    isActive={isEditActive}
+                    handleCheckboxChange={handleCheckboxChange}
+                    daleteItem={daleteItem}
+                    changeItem={changeItem}
+                />
+
+                <Button 
+                    tag='button'
+                    doThis={toggleModel}
+                    buttonClass={'button-circle'}>
+                        <span className="button-circle__circle"/>
+                </Button>
+
+                <Condition
+                    isActive={editWindowOpen}
+                    type={1}>
+                        <Portal id='edit-window'>
+                            <ModalWindow
+                                onClose={toggleEditModal}
+                                handleInputChange={handleInputChange}
+                                addItemToPage={addChangedItemToPage}
+                                text={newItem}
+                                textButton='Сохранить'
+                                areaClass={'add-form__textarea_low-height'}
+                            />
+                        </Portal>
+                </Condition>
+
+                <Condition
+                    isActive={isModalOpen}
+                    type={1}>
+                        <Portal id='modal'>
+                            <ModalWindow
+                                onClose={toggleModel}
+                                handleInputChange={handleInputChange}
+                                addItemToPage={addItemToPage}
+                                text={newItem}
+                                textButton='Добавить'
+                                areaClass={'add-form__textarea_large-height'}
+                            />
+                        </Portal>
+                </Condition>
+
+            </main>
             
-          <List 
-            itemList={this.state.itemList}
-            isActive={this.state.isEditActive}
-            handleCheckboxChange={this.handleCheckboxChange}
-            daleteItem={this.daleteItem}
-            changeItem={this.changeItem}
-          />
-
-          <Button
-            tag="button" 
-            doThis={this.toggleModal} 
-            buttonClass={"button-circle"}>
-              <span className="button-circle__circle"/>
-          </Button>
-
-          <Condition
-            isActive={this.state.editWindowOpen}
-            type = {1}>
-              <Portal 
-                id='edit-window'
-                // isModalOpen={this.state.isModalOpen}
-              >
-                <ModalWindow
-                  onClose={this.toggleEditModal}
-                  handleInputChange={this.handleInputChange}
-                  addItemToPage={this.addChangedItemToPage}
-                  text={this.state.newItem}
-                  textButton='Сохранить'
-                  areaClass={'add-form__textarea_low-height'}> 
-                </ModalWindow>
-              </Portal>
-          </Condition>
-
-          <Condition 
-            isActive={this.state.isModalOpen}
-            type = {1}>
-              <Portal 
-                id="modal"
-                // isModalOpen={this.state.isModalOpen}
-              >
-                <ModalWindow 
-                  onClose={this.toggleModal} 
-                  handleInputChange={this.handleInputChange}
-                  addItemToPage={this.addItemToPage}
-                  text={this.state.newItem}
-                  textButton="Добавить"
-                  areaClass={"add-form__textarea_large-height"}>
-                </ModalWindow>
-              </Portal>
-          </Condition>
-
-        </main>
-      </div> 
+        </div>
     )
-  }
 }
-
-export default App
 
 

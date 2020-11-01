@@ -9,13 +9,13 @@ export default function ModalWindow(props) {
         <div className="container container_position">
             <div className="modal-window">
                 <Form 
-                    handleChange={(e) => props.handleInputChange('newItem', e.target.value)}
+                    handleChange={(e) => props.handleInputChange(e.target.value)}
                     areaClass={props.areaClass}
                     text={props.text}
                     onClose={props.onClose}
                     textButton={props.textButton}
                     addItem={props.addItemToPage}   
-                    />
+                />
             </div>
         </div>
     )
