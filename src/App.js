@@ -207,7 +207,10 @@ class App extends Component {
           <Condition
             isActive={this.state.editWindowOpen}
             type = {1}>
-              <Portal id='edit-window'>
+              <Portal 
+                id='edit-window'
+                // isModalOpen={this.state.isModalOpen}
+              >
                 <ModalWindow
                   onClose={this.toggleEditModal}
                   handleInputChange={this.handleInputChange}
@@ -222,7 +225,10 @@ class App extends Component {
           <Condition 
             isActive={this.state.isModalOpen}
             type = {1}>
-              <Portal id="modal">
+              <Portal 
+                id="modal"
+                // isModalOpen={this.state.isModalOpen}
+              >
                 <ModalWindow 
                   onClose={this.toggleModal} 
                   handleInputChange={this.handleInputChange}
