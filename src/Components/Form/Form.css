@@ -2,6 +2,15 @@
     width: 295px;
 }
 
+.add-form textarea {
+    outline: none;
+    font-family: Gilroy;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 140%;
+}
+
 .add-form__textarea {
     width: 295px;
     border: 2px solid var(--color-light);
@@ -25,15 +34,24 @@
     height: 40px;
     border-radius: 10px;
     border: none;
+    transition: all 0.15s ease-in-out;
 }
 
 .add-form__button_close {
     background: var(--color-grey)
 }
 
+.add-form__button_close:hover {
+    background-color: #cecece;
+}
+
 .add-form__button_add {
     background: var(--color-blue);
     color: var(--color-white)
+}
+
+.add-form__button_add:hover {
+    background-color: #1c8fe0;
 }
 
 .add-form__wrapper {

@@ -21,4 +21,13 @@
     border-radius: 4px;
     border: none;
     background: var(--color-grey);
+    transition: all 0.3s ease-in-out;
+}
+
+.header__button:hover {
+   background-color: #cecece;
+}
+
+.header__button:focus {
+    transform: perspective(400px) translateZ(-18px);
 }

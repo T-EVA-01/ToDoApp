@@ -7,3 +7,9 @@ button {
     background: var(--color-grey);
     cursor: pointer;
 }
+
+input[type="button"] {
+    outline: none;
+}
+
+
