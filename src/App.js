@@ -7,6 +7,9 @@ import Portal from './Components/Portal';
 import List from './Components/List/List'
 import Condition from './Components/Сondition';
 
+import { CSSTransition } from 'react-transition-group'
+
+import './css/animations.css';
 import './css/App.css';
 import './css/fonts.css';
 
@@ -32,18 +35,20 @@ export default function App() {
 
 
 
-    const toggleModel = () => {
+    const toggleModel = (e) => {
+        e.preventDefault();
         setIsModalOpen(!isModalOpen);
-        setIsEditActive(false)
+        setIsEditActive(false);
     }
 
     const toggleEdit = () => {
         setIsEditActive(!isEditActive)
     }
 
-    const toggleEditModal = () => {
+    const toggleEditModal = (e) => {
+        e.preventDefault();
         setEditWindowOpen(!editWindowOpen);
-        setNewItem('')
+        setNewItem('');
     }
 
 
@@ -176,35 +181,41 @@ export default function App() {
                         <span className="button-circle__circle"/>
                 </Button>
 
-                <Condition
-                    isActive={editWindowOpen}
-                    type={1}>
-                        <Portal id='edit-window'>
-                            <ModalWindow
-                                onClose={toggleEditModal}
-                                handleInputChange={handleInputChange}
-                                addItemToPage={addChangedItemToPage}
-                                text={newItem}
-                                textButton='Сохранить'
-                                areaClass={'add-form__textarea_low-height'}
-                            />
-                        </Portal>
-                </Condition>
+                <CSSTransition
+                    in={editWindowOpen}
+                    timeout={400}
+                    classNames="hide"
+                    unmountOnExit={true}
+                >
+                    <Portal id='edit-window'>
+                        <ModalWindow
+                            onClose={toggleEditModal}
+                            handleInputChange={handleInputChange}
+                            addItemToPage={addChangedItemToPage}
+                            text={newItem}
+                            textButton='Сохранить'
+                            areaClass={'add-form__textarea_low-height'}
+                        />
+                    </Portal>
+                </CSSTransition>
 
-                <Condition
-                    isActive={isModalOpen}
-                    type={1}>
-                        <Portal id='modal'>
-                            <ModalWindow
-                                onClose={toggleModel}
-                                handleInputChange={handleInputChange}
-                                addItemToPage={addItemToPage}
-                                text={newItem}
-                                textButton='Добавить'
-                                areaClass={'add-form__textarea_large-height'}
-                            />
-                        </Portal>
-                </Condition>
+                <CSSTransition
+                    in={isModalOpen}
+                    timeout={400}
+                    classNames="hide"
+                    unmountOnExit={true}
+                >
+                    <Portal id='modal'>
+                        <ModalWindow
+                            onClose={toggleModel}
+                            handleInputChange={handleInputChange}
+                            addItemToPage={addItemToPage}
+                            text={newItem}
+                            textButton='Добавить'
+                            areaClass={'add-form__textarea_large-height'}
+                        />
+                    </Portal>
+                </CSSTransition>
 
             </main>
             

@@ -1,0 +1,34 @@
+/* Modal window animation */
+
+/* enter */
+.hide-enter {
+    top: 100vh;
+  }
+.hide-enter.hide-enter-active {
+    top: 132px;
+    animation: modal-show 0.4s ease-in-out;
+}
+  
+  /* exit */
+.hide-exit {
+    top: 132px;
+}
+.hide-exit.hide-exit-active {
+    top: 100vh;
+    animation: modal-hide 0.4s ease-in-out;
+}
+.hide-exit-done {
+    top: 100vh;
+}
+
+@keyframes modal-hide {
+    0% {top: 132px;}
+    50% {top: 100px;}
+    100% {top: 100vh;}
+}
+
+@keyframes modal-show {
+    0% {top: 100vh;}
+    50% {top: 100px;}
+    100% {top: 132px;}
+}
