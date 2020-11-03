@@ -32,8 +32,8 @@ export default function List(props) {
                     />
             </Condition>
             <p  style={item.complited === true ? isDoneClass : {}}
-                onClick={() => {props.changeItem(item)}}
-                className={props.isActive === true ? "task__text task__text_pointer" : "task__text"}
+                onClick={ props.isActive ? () => {props.changeItem(item)} : () => {props.handleCheckboxChange(item)}}
+                className={"task__text task__text_pointer"}
             >
                 {item.value}
             </p>
