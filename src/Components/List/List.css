@@ -4,6 +4,10 @@
     align-items: center;
 }
 
+.anima-container {
+    height: 22px;
+}
+
 .task:not(:last-child) {
     margin-bottom: 30px;
 } 
@@ -47,9 +51,6 @@
     word-wrap: break-word;
     overflow: hidden;
     transition: color 0.1s ease-in;
-}
-
-.task__text_pointer {
     cursor: pointer;
 }
 

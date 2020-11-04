@@ -4,10 +4,9 @@ import Header from './Components/Header/Header'
 import Button from './Components/Button/Button';
 import ModalWindow from './Components/ModalWindow/ModalWindow';
 import Portal from './Components/Portal';
-import List from './Components/List/List'
-import Condition from './Components/Сondition';
+import List from './Components/List/List';
 
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group';
 
 import './css/animations.css';
 import './css/App.css';
@@ -145,26 +144,34 @@ export default function App() {
         <div className='container'>
 
             <Header title='Сегодня'>
-                <Condition
-                    isActive={itemList.length !== 0}
-                    type={1}>
-                        <Button 
-                            tag='button'
-                            doThis={toggleEdit}
-                            buttonClass={'header__button'}
-                        >
-                            {isEditActive ? 'Отмена' : 'Править'}
-                        </Button>
-                </Condition>
+                <CSSTransition
+                    in={itemList.length !== 0}
+                    timeout={400}
+                    classNames='show'
+                    unmountOnExit={true}
+                    mountOnEnter={true}
+                >
+                    <Button 
+                        tag='button'
+                        doThis={toggleEdit}
+                        buttonClass={'header__button'}
+                    >
+                        {isEditActive ? 'Отмена' : 'Править'}
+                    </Button>
+                </CSSTransition>
             </Header>
 
             <main className='main'>
 
-                <Condition 
-                    isActive={itemList.length === 0}
-                    type={1}>
-                        <h2 className='task-state'>Список задач пуст</h2>
-                </Condition>
+                <CSSTransition 
+                    in={itemList.length === 0}
+                    timeout={1000}
+                    classNames='show-text'
+                    unmountOnExit={true}
+                    exit={false}
+                >   
+                    <h2 className='task-list-state'>Список задач пуст</h2>
+                </CSSTransition>
 
                 <List 
                     itemList={itemList}
