@@ -6,7 +6,7 @@
   }
 .hide-enter.hide-enter-active {
     top: 132px;
-    animation: modal-show 0.4s ease-in-out;
+    animation: modal-show 400ms ease-in-out;
 }
   
   /* exit */
@@ -15,7 +15,7 @@
 }
 .hide-exit.hide-exit-active {
     top: 100vh;
-    animation: modal-hide 0.4s ease-in-out;
+    animation: modal-hide 400ms ease-in-out;
 }
 .hide-exit-done {
     top: 100vh;
@@ -31,4 +31,122 @@
     0% {top: 100vh;}
     50% {top: 100px;}
     100% {top: 132px;}
+}
+
+
+
+/* header button */
+
+/* enter */
+
+.show-enter {
+    opacity: 0;
+}
+
+.show-enter.show-enter-active {
+    opacity: 1;
+    transition: opacity 400ms ease-in-out;
+}
+
+/* exit */
+
+.show-exit {
+    opacity: 1;
+}
+
+.show-exit.show-exit-active {
+    opacity: 0;
+    transition: opacity 400ms ease-in-out;
+}
+
+
+
+/* animation of the task list status text  */
+
+/* enter */
+
+.show-text-enter {
+    opacity: 0;
+    position: absolute;
+}
+
+.show-text-enter.show-text-enter-active {
+    opacity: 1;
+    transition: opacity 500ms ease-in 500ms;
+}
+
+/* exit */
+
+.show-text-exit {
+    opacity: 1;
+    
+}
+
+.show-text-exit.show-text-exit-active {
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+}
+
+
+
+/* animation of list items's buttons  */
+
+.fade-enter{
+    opacity: 0;
+}
+
+.fade-exit{
+    opacity: 1;
+}
+
+.fade-enter-active{
+    opacity: 1;
+}
+
+.fade-exit-active{
+    opacity: 0;
+}
+
+.fade-enter-active,
+.fade-exit-active{
+    transition: opacity 300ms;
+}
+
+
+
+/* animation of item list */
+
+.item-enter {
+    opacity: 0;
+}
+
+.item-enter-active {
+    opacity: 1;
+    transition: opacity 300ms ease-in 400ms;
+}
+
+.item-exit {
+    opacity: 1;
+}
+
+.item-exit-active {
+    opacity: 0;
+    animation: item-gone 500ms ease-in-out;
+}
+
+@keyframes item-gone {
+    0% {
+        opacity: 1;
+        transform: translateX(0);
+    }       
+
+    30% {
+        opacity: 1;
+        transform: translateX(-10px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateX(30px);
+    }
 }
