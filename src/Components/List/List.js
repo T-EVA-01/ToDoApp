@@ -1,13 +1,15 @@
 import React from "react"   
 import Button from  "../Button/Button";
 import {TransitionGroup, CSSTransition, SwitchTransition} from 'react-transition-group';
-
+import { useSelector } from 'react-redux';
 import "./List.css";
 
 export default function List(props) {
-    const itemList = props.itemList;
+    const selectTodos = state => state.todos;
+    const todos = useSelector(selectTodos);
     const isDoneClass = {color: "rgba(0, 0, 0, 0.6)"}
-    const list = itemList.map(item => 
+    
+    const list = todos.map(item => 
         <CSSTransition
             key={item.id}
             timeout={700}
@@ -40,7 +42,7 @@ export default function List(props) {
                                         tag="input"
                                         type="checkbox"
                                         inputClass="task__checkbox custom-checkbox"
-                                        checked={item.complited === true ? "checked" : ""}
+                                        checked={item.completed === true ? "checked" : ""}
                                         change={() => props.handleCheckboxChange(item)} 
                                     />
                                     <label htmlFor={item.id}/>
