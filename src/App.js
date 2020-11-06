@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 
 import Header from './Components/Header/Header'
 import Button from './Components/Button/Button';
@@ -8,6 +8,8 @@ import List from './Components/List/List';
 
 import { CSSTransition } from 'react-transition-group';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import './css/animations.css';
 import './css/App.css';
 import './css/fonts.css';
@@ -15,24 +17,14 @@ import './css/fonts.css';
 export default function App() {
 
     const [newItem, setNewItem] = useState('');
-    const [itemList, setItemList] = useState([]);
     const [isEditActive, setIsEditActive] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isDone, setIsDone] = useState(false);
     const [editWindowOpen, setEditWindowOpen] = useState(false);
     const [changingItem, setChangingItem] = useState({});
 
-
-
-    useEffect(() => {
-        const taskList = JSON.parse(localStorage.getItem('taskList'));
-    
-        if(Boolean(taskList)) {
-          setItemList(taskList)  
-        } 
-    }, [])
-
-
+    const dispatch = useDispatch();
+    const selectTodos = state => state.todos;
+    const todos = useSelector(selectTodos);
 
     const toggleModel = (e) => {
         e.preventDefault();
@@ -51,66 +43,45 @@ export default function App() {
     }
 
 
-    
+
     const handleCheckboxChange = (item) => {
-        item.complited = !item.complited;
-        setIsDone(!isDone);
-        const taskList = [...itemList];
-        localStorage.setItem('taskList', JSON.stringify(taskList));
+        dispatch({type: 'todo/todoToggled', payload: item.id})
     }
 
     const handleInputChange = (value) => {
         setNewItem(value)
     }
 
-
+    
 
     const daleteItem = (id) => {
-        const taskList = [...itemList];
-        const updatedItemList = taskList.filter(item => item.id !== id);
-        setItemList(updatedItemList);
-
-        localStorage.setItem('taskList', JSON.stringify(updatedItemList));
-        const storageItemListLingth = JSON.parse(localStorage.getItem('taskList')).length;
-        if(storageItemListLingth === 0) {
-          localStorage.removeItem('taskList');
-        };
+        dispatch({type: 'todo/todoDeleted', payload: id})
     }
-
-
 
     const addItemToPage = () => {
         const currentValue = newItem.trim().length;
+        
         if(currentValue === 0) {
             alert('Введите что-нибудь');
         } else {
-            const newTask = {
-                id: Number(Math.random().toFixed(10)) * Math.pow(10, 10),
-                value: newItem,
-                complited: false
-            };
-
-            const taskList = [...itemList];
-            taskList.push(newTask);
+            dispatch({type: 'todo/todoAdded', payload: newItem})
 
             setNewItem('');
-            setItemList(taskList);
             setIsModalOpen(!isModalOpen)
-
-            localStorage.setItem('taskList', JSON.stringify(taskList));
         }
     }
 
+
     const changeItem = (item) => {
         const condition = isEditActive;
+        
         if(condition) {
             setEditWindowOpen(!editWindowOpen);
             setNewItem(item.value);
             setChangingItem({
-                index: itemList.indexOf(item),
                 id: item.id,
                 value: item.value,
-                complited: item.complited
+                completed: item.completed
             });
         };
     }
@@ -120,22 +91,14 @@ export default function App() {
         if(currentValue === 0) {
             alert('Введить что-нибудь');
         } else {
-            const indexOfItem = changingItem.index;
-            const newTask = {
+            dispatch({type: 'todo/todoChanged', payload: {
                 id: changingItem.id,
                 value: newItem,
-                complited: changingItem.complited
-            };
-
-            const newTaskList = [...itemList];
-            newTaskList.splice(indexOfItem, 1, newTask);
+                completed: changingItem.completed
+            }})
 
             setNewItem('');
-            setItemList(newTaskList);
             setEditWindowOpen(!editWindowOpen);
-
-            localStorage.setItem('taskList', JSON.stringify(newTaskList));
-
         }
     }
 
@@ -145,7 +108,7 @@ export default function App() {
 
             <Header title='Сегодня'>
                 <CSSTransition
-                    in={itemList.length !== 0}
+                    in={todos.length !== 0}
                     timeout={400}
                     classNames='show'
                     unmountOnExit={true}
@@ -164,7 +127,7 @@ export default function App() {
             <main className='main'>
 
                 <CSSTransition 
-                    in={itemList.length === 0}
+                    in={todos.length === 0}
                     timeout={1000}
                     classNames='show-text'
                     unmountOnExit={true}
@@ -174,7 +137,7 @@ export default function App() {
                 </CSSTransition>
 
                 <List 
-                    itemList={itemList}
+                    itemList={todos}
                     isActive={isEditActive}
                     handleCheckboxChange={handleCheckboxChange}
                     daleteItem={daleteItem}
