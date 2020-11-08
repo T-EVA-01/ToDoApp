@@ -51,7 +51,7 @@ export default function List(props) {
                         </div>
                     </CSSTransition>
                 </SwitchTransition>
-                <p  style={item.complited === true ? isDoneClass : {}}
+                <p  style={item.completed === true ? isDoneClass : {}}
                     onClick={ props.isActive ? () => {props.changeItem(item)} : () => {props.handleCheckboxChange(item)}}
                     className={"task__text"}
                 >
