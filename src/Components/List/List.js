@@ -1,13 +1,22 @@
 import React from "react"   
 import Button from  "../Button/Button";
 import {TransitionGroup, CSSTransition, SwitchTransition} from 'react-transition-group';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import "./List.css";
 
 export default function List(props) {
+    const dispatch = useDispatch();
     const selectTodos = state => state.todos;
     const todos = useSelector(selectTodos);
     const isDoneClass = {color: "rgba(0, 0, 0, 0.6)"}
+
+    const handleCheckboxChange = (item) => {
+        dispatch({type: 'todo/todoToggled', payload: item.id})
+    }
+
+    const deleteItem = (item) => {
+        dispatch({type: 'todo/todoDeleted', payload: item.id})
+    }
     
     const list = todos.map(item => 
         <CSSTransition
@@ -32,7 +41,7 @@ export default function List(props) {
                                 ? 
                                 <Button 
                                     tag="button"
-                                    doThis={() => props.daleteItem(item.id)}
+                                    doThis={() => deleteItem(item)}
                                     buttonClass={"task__remove-button"}
                                 />
                                 :
@@ -43,7 +52,7 @@ export default function List(props) {
                                         type="checkbox"
                                         inputClass="task__checkbox custom-checkbox"
                                         checked={item.completed === true ? "checked" : ""}
-                                        change={() => props.handleCheckboxChange(item)} 
+                                        change={() => handleCheckboxChange(item)} 
                                     />
                                     <label htmlFor={item.id}/>
                                 </React.Fragment>  
@@ -52,7 +61,7 @@ export default function List(props) {
                     </CSSTransition>
                 </SwitchTransition>
                 <p  style={item.completed === true ? isDoneClass : {}}
-                    onClick={ props.isActive ? () => {props.changeItem(item)} : () => {props.handleCheckboxChange(item)}}
+                    onClick={ props.isActive ? () => {props.openTheEditor(item)} : () => handleCheckboxChange(item)}
                     className={"task__text"}
                 >
                     {item.value}

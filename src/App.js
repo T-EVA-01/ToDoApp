@@ -17,45 +17,31 @@ import './css/fonts.css';
 export default function App() {
 
     const [newItem, setNewItem] = useState('');
-    const [isEditActive, setIsEditActive] = useState(false);
+    const [isEditStateActive, setIsEditStateActive] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editWindowOpen, setEditWindowOpen] = useState(false);
+    const [isEditWindowOpen, setIsEditWindowOpen] = useState(false);
     const [changingItem, setChangingItem] = useState({});
 
     const dispatch = useDispatch();
     const selectTodos = state => state.todos;
     const todos = useSelector(selectTodos);
 
-    const toggleModel = (e) => {
+    const toggleAddWindow = (e) => {
         e.preventDefault();
         setIsModalOpen(!isModalOpen);
-        setIsEditActive(false);
+        setIsEditStateActive(false);
     }
 
-    const toggleEdit = () => {
-        setIsEditActive(!isEditActive)
-    }
-
-    const toggleEditModal = (e) => {
+    const toggleEditWindow = (e) => {
         e.preventDefault();
-        setEditWindowOpen(!editWindowOpen);
+        setIsEditWindowOpen(!isEditWindowOpen);
         setNewItem('');
     }
 
 
 
-    const handleCheckboxChange = (item) => {
-        dispatch({type: 'todo/todoToggled', payload: item.id})
-    }
-
     const handleInputChange = (value) => {
         setNewItem(value)
-    }
-
-    
-
-    const daleteItem = (id) => {
-        dispatch({type: 'todo/todoDeleted', payload: id})
     }
 
     const addItemToPage = () => {
@@ -72,18 +58,14 @@ export default function App() {
     }
 
 
-    const changeItem = (item) => {
-        const condition = isEditActive;
-        
-        if(condition) {
-            setEditWindowOpen(!editWindowOpen);
-            setNewItem(item.value);
-            setChangingItem({
-                id: item.id,
-                value: item.value,
-                completed: item.completed
-            });
-        };
+    const openEditWindow = (item) => {
+        setIsEditWindowOpen(!isEditWindowOpen);
+        setNewItem(item.value);
+        setChangingItem({
+            id: item.id,
+            value: item.value,
+            completed: item.completed
+        })
     }
 
     const addChangedItemToPage = () => {
@@ -98,7 +80,7 @@ export default function App() {
             }})
 
             setNewItem('');
-            setEditWindowOpen(!editWindowOpen);
+            setIsEditWindowOpen(!isEditWindowOpen);
         }
     }
 
@@ -116,10 +98,10 @@ export default function App() {
                 >
                     <Button 
                         tag='button'
-                        doThis={toggleEdit}
+                        doThis={() => setIsEditStateActive(!isEditStateActive)}
                         buttonClass={'header__button'}
                     >
-                        {isEditActive ? 'Отмена' : 'Править'}
+                        {isEditStateActive ? 'Отмена' : 'Править'}
                     </Button>
                 </CSSTransition>
             </Header>
@@ -137,29 +119,26 @@ export default function App() {
                 </CSSTransition>
 
                 <List 
-                    itemList={todos}
-                    isActive={isEditActive}
-                    handleCheckboxChange={handleCheckboxChange}
-                    daleteItem={daleteItem}
-                    changeItem={changeItem}
+                    isActive={isEditStateActive}
+                    openTheEditor={openEditWindow}
                 />
 
                 <Button 
                     tag='button'
-                    doThis={toggleModel}
+                    doThis={toggleAddWindow}
                     buttonClass={'button-circle'}>
                         <span className="button-circle__circle"/>
                 </Button>
 
                 <CSSTransition
-                    in={editWindowOpen}
+                    in={isEditWindowOpen}
                     timeout={400}
                     classNames="hide"
                     unmountOnExit={true}
                 >
                     <Portal id='edit-window'>
                         <ModalWindow
-                            onClose={toggleEditModal}
+                            onClose={toggleEditWindow}
                             handleInputChange={handleInputChange}
                             addItemToPage={addChangedItemToPage}
                             text={newItem}
@@ -177,7 +156,7 @@ export default function App() {
                 >
                     <Portal id='modal'>
                         <ModalWindow
-                            onClose={toggleModel}
+                            onClose={toggleAddWindow}
                             handleInputChange={handleInputChange}
                             addItemToPage={addItemToPage}
                             text={newItem}
