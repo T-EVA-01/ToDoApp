@@ -6,19 +6,19 @@ import "./List.css";
 
 export default function List(props) {
     const dispatch = useDispatch();
-    const selectTodos = state => state.todos;
-    const todos = useSelector(selectTodos);
+    const selectItemList = state => state.itemList;
+    const itemList = useSelector(selectItemList);
     const isDoneClass = {color: "rgba(0, 0, 0, 0.6)"}
 
     const handleCheckboxChange = (item) => {
-        dispatch({type: 'todo/todoToggled', payload: item.id})
+        dispatch({type: 'item/itemToggled', payload: item.id})
     }
 
     const deleteItem = (item) => {
-        dispatch({type: 'todo/todoDeleted', payload: item.id})
+        dispatch({type: 'item/itemDeleted', payload: item.id})
     }
     
-    const list = todos.map(item => 
+    const list = itemList.map(item => 
         <CSSTransition
             key={item.id}
             timeout={700}

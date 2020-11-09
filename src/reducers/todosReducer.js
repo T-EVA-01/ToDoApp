@@ -1,46 +1,46 @@
 const initialState = []
 
-function nextTodoId(todos) {
-    const maxId = todos.reduce((maxId, todo) => Math.max(todo.id, maxId), -1)
+function nextItemId(itemList) {
+    const maxId = itemList.reduce((maxId, item) => Math.max(item.id, maxId), -1)
     return maxId + 1
 }
 
-export default function todosReducer(state = initialState, action) {
+export default function itemListReducer(state = initialState, action) {
     switch(action.type) {
-        case 'todo/todoAdded': {
+        case 'item/itemAdded': {
             return [
                 ...state,
                 {
-                    id: nextTodoId(state),
+                    id: nextItemId(state),
                     value: action.payload,
                     completed: false
                 }
             ]
         }
-        case 'todo/todoToggled': {
-            return state.map((todo) => {
-                if (todo.id !== action.payload) {
-                    return todo
+        case 'item/itemToggled': {
+            return state.map((item) => {
+                if (item.id !== action.payload) {
+                    return item
                 }
 
                 return {
-                    ...todo,
-                    completed: !todo.completed 
+                    ...item,
+                    completed: !item.completed 
                 }
             })
         }
-        case 'todo/todoDeleted': {
-            return state.filter((todo) => todo.id !== action.payload)
+        case 'item/itemDeleted': {
+            return state.filter((item) => item.id !== action.payload)
         }
-        case 'todo/todoChanged': {
+        case 'item/itemChanged': {
 
-            return state.map((todo) => {
-                if(todo.id !== action.payload.id){
-                    return todo
+            return state.map((item) => {
+                if(item.id !== action.payload.id){
+                    return item
                 }
 
                 return {
-                    ...todo,
+                    ...item,
                     id: action.payload.id,
                     value: action.payload.value,
                     completed: action.payload.completed

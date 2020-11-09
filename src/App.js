@@ -16,51 +16,51 @@ import './css/fonts.css';
 
 export default function App() {
 
-    const [newItem, setNewItem] = useState('');
+    const [newItemText, setNewItemText] = useState('');
     const [isEditStateActive, setIsEditStateActive] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isAddWindowOpen, setIsAddWindowOpen] = useState(false);
     const [isEditWindowOpen, setIsEditWindowOpen] = useState(false);
     const [changingItem, setChangingItem] = useState({});
 
     const dispatch = useDispatch();
-    const selectTodos = state => state.todos;
-    const todos = useSelector(selectTodos);
+    const selectItems = state => state.itemList;
+    const itemList = useSelector(selectItems);
 
-    const toggleAddWindow = (e) => {
+    const handleAddWindowDisplay = (e) => {
         e.preventDefault();
-        setIsModalOpen(!isModalOpen);
+        setIsAddWindowOpen(!isAddWindowOpen);
         setIsEditStateActive(false);
     }
 
-    const toggleEditWindow = (e) => {
+    const handleEditWindowDisplay = (e) => {
         e.preventDefault();
         setIsEditWindowOpen(!isEditWindowOpen);
-        setNewItem('');
+        setNewItemText('');
     }
 
 
 
     const handleInputChange = (value) => {
-        setNewItem(value)
+        setNewItemText(value)
     }
 
     const addItemToPage = () => {
-        const currentValue = newItem.trim().length;
+        const currentValue = newItemText.trim().length;
         
         if(currentValue === 0) {
             alert('Введите что-нибудь');
         } else {
-            dispatch({type: 'todo/todoAdded', payload: newItem})
+            dispatch({type: 'item/itemAdded', payload: newItemText})
 
-            setNewItem('');
-            setIsModalOpen(!isModalOpen)
+            setNewItemText('');
+            setIsAddWindowOpen(!isAddWindowOpen)
         }
     }
 
 
     const openEditWindow = (item) => {
         setIsEditWindowOpen(!isEditWindowOpen);
-        setNewItem(item.value);
+        setNewItemText(item.value);
         setChangingItem({
             id: item.id,
             value: item.value,
@@ -69,17 +69,17 @@ export default function App() {
     }
 
     const addChangedItemToPage = () => {
-        const currentValue = newItem.trim().length;
+        const currentValue = newItemText.trim().length;
         if(currentValue === 0) {
             alert('Введить что-нибудь');
         } else {
-            dispatch({type: 'todo/todoChanged', payload: {
+            dispatch({type: 'item/itemChanged', payload: {
                 id: changingItem.id,
-                value: newItem,
+                value: newItemText,
                 completed: changingItem.completed
             }})
 
-            setNewItem('');
+            setNewItemText('');
             setIsEditWindowOpen(!isEditWindowOpen);
         }
     }
@@ -90,7 +90,7 @@ export default function App() {
 
             <Header title='Сегодня'>
                 <CSSTransition
-                    in={todos.length !== 0}
+                    in={itemList.length !== 0}
                     timeout={400}
                     classNames='show'
                     unmountOnExit={true}
@@ -109,7 +109,7 @@ export default function App() {
             <main className='main'>
 
                 <CSSTransition 
-                    in={todos.length === 0}
+                    in={itemList.length === 0}
                     timeout={1000}
                     classNames='show-text'
                     unmountOnExit={true}
@@ -125,7 +125,7 @@ export default function App() {
 
                 <Button 
                     tag='button'
-                    doThis={toggleAddWindow}
+                    doThis={handleAddWindowDisplay}
                     buttonClass={'button-circle'}>
                         <span className="button-circle__circle"/>
                 </Button>
@@ -138,10 +138,10 @@ export default function App() {
                 >
                     <Portal id='edit-window'>
                         <ModalWindow
-                            onClose={toggleEditWindow}
+                            onClose={handleEditWindowDisplay}
                             handleInputChange={handleInputChange}
                             addItemToPage={addChangedItemToPage}
-                            text={newItem}
+                            text={newItemText}
                             textButton='Сохранить'
                             areaClass={'add-form__textarea_low-height'}
                         />
@@ -149,17 +149,17 @@ export default function App() {
                 </CSSTransition>
 
                 <CSSTransition
-                    in={isModalOpen}
+                    in={isAddWindowOpen}
                     timeout={400}
                     classNames="hide"
                     unmountOnExit={true}
                 >
                     <Portal id='modal'>
                         <ModalWindow
-                            onClose={toggleAddWindow}
+                            onClose={handleAddWindowDisplay}
                             handleInputChange={handleInputChange}
                             addItemToPage={addItemToPage}
-                            text={newItem}
+                            text={newItemText}
                             textButton='Добавить'
                             areaClass={'add-form__textarea_large-height'}
                         />
